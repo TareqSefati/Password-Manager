@@ -12,7 +12,7 @@ public final class AppConstants {
     public static final String APP_TITLE = "Password Manager";
     public static final double MIN_WINDOW_WIDTH = 800.0;
     public static final double MIN_WINDOW_HEIGHT = 600.0;
-    public static final String FXML_LOGIN_VIEW = "/fxml/login.fxml";
+    public static final String FXML_LOGIN_VIEW = "views/login.fxml";
 
     // --- MongoDb Constants ---
     public static final String MONGO_URI_KEY = "mongodb_uri";

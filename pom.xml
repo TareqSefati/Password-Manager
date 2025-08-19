@@ -12,24 +12,49 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.9.2</junit.version>
+        <javafx.version>17.0.6</javafx.version>
+        <jfoenix.version>9.0.10</jfoenix.version>
+        <formsfx.version>11.6.0</formsfx.version>
+        <lombok.version>1.18.36</lombok.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.6</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.6</version>
+            <version>${javafx.version}</version>
         </dependency>
         <!-- JFoenix Dependency -->
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
-            <version>9.0.10</version> <!-- Use the latest stable version -->
+            <version>${jfoenix.version}</version>
+        </dependency>
+<!--        &lt;!&ndash; FormsFX Core &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.dlsc.formsfx</groupId>-->
+<!--            <artifactId>formsfx-core</artifactId>-->
+<!--            <version>${formsfx.version}</version>-->
+<!--            &lt;!&ndash; Important: Use javafx-controls classifier for JavaFX 11+ &ndash;&gt;-->
+<!--&lt;!&ndash;            <classifier>javafx-controls</classifier>&ndash;&gt;-->
+<!--        </dependency>-->
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>5.5.1</version>
         </dependency>
 
         <dependency>
@@ -55,6 +80,13 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
@@ -22,9 +24,9 @@
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <JFXTextField alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Username/ Email" VBox.vgrow="NEVER" />
-            <JFXTextField alignment="CENTER" labelFloat="true" layoutX="160.0" layoutY="58.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Password" />
-            <JFXButton buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Login">
+            <JFXTextField fx:id="username" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Username" VBox.vgrow="NEVER" />
+            <JFXPasswordField fx:id="password" alignment="CENTER" labelFloat="true" layoutX="160.0" layoutY="58.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Password" />
+            <JFXButton fx:id="btnLogin" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onLoginAction" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Login">
                <ripplerFill>
                   <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                      <stops>
@@ -36,8 +38,11 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </JFXButton>
-            <JFXButton buttonType="RAISED" contentDisplay="CENTER" layoutX="160.0" layoutY="159.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Register">
+            <JFXButton fx:id="btnRegister" buttonType="RAISED" contentDisplay="CENTER" layoutX="160.0" layoutY="159.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onRegisterAction" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Register">
                <ripplerFill>
                   <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                      <stops>
@@ -49,8 +54,11 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </JFXButton>
-            <JFXButton contentDisplay="CENTER" layoutX="160.0" layoutY="229.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Setting - MongoDB URI ">
+            <JFXButton fx:id="btnSetting" contentDisplay="CENTER" layoutX="160.0" layoutY="229.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onSettingAction" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Setting - MongoDB URI ">
                <ripplerFill>
                   <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                      <stops>
@@ -62,6 +70,9 @@
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </JFXButton>
          </children>
       </VBox>

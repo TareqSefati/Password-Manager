@@ -1,6 +1,7 @@
 package co.tareq.passwordManager.registration;
 
 import co.tareq.passwordManager.MainApp;
+import co.tareq.passwordManager.service.UserService;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
@@ -59,6 +60,7 @@ public class RegistrationController {
 
     // Registration Model User instance
     private RegUser user = new RegUser();
+    private final UserService userService;
 
     // Regex patterns
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
@@ -71,6 +73,10 @@ public class RegistrationController {
     private BooleanProperty isEmailValid = new SimpleBooleanProperty(false);
     private BooleanProperty isPasswordValid = new SimpleBooleanProperty(false);
     private BooleanProperty isConfirmPasswordValid = new SimpleBooleanProperty(false);
+
+    public RegistrationController() {
+        this.userService = new UserService();
+    }
 
     @FXML
     public void initialize() {
@@ -171,7 +177,27 @@ public class RegistrationController {
 
     @FXML
     void onRegisterAction(ActionEvent event) {
-
+        String usernameText = username.getText();
+        String emailText = email.getText();
+        String passwordText = password.getText();
+        try {
+            // Attempt to register the user via the UserService
+            RegUser registeredUser = userService.registerUser(usernameText, emailText, passwordText);
+            System.out.println(registeredUser);
+            showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Your account has been created! You can now log in.");
+            MainApp.setRoot(FXML_LOGIN_VIEW); // Navigate back to the Login screen
+        } catch (IllegalArgumentException e) {
+            showAlert(Alert.AlertType.ERROR, "Registration Error", e.getMessage()); // For username already exists
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Registration Error", "An unexpected error occurred during registration: " + e.getMessage());
+            e.printStackTrace(); // Log the full stack trace for debugging
+        } finally {
+            // Crucial: Clear sensitive password data from memory
+            passwordText = null;
+            // Clear UI field
+            clearAllInputFields();
+            clearAllErrorLabel();
+        }
     }
 
     @FXML

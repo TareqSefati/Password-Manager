@@ -12,64 +12,15 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
+@ToString
 public class RegUser {
 
     @BsonId
     private ObjectId id;
-    private StringProperty username;
-    private StringProperty email;
-    private StringProperty password; // Master password hash
+    private String username;
+    private String email;
+    private String password; // Master password hash
     private String salt; // Salt for master password hashing
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username.get();
-    }
-
-    public StringProperty usernameProperty() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username.set(username);
-    }
-
-    public String getEmail() {
-        return email.get();
-    }
-
-    public StringProperty emailProperty() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email.set(email);
-    }
-
-    public String getPassword() {
-        return password.get();
-    }
-
-    public StringProperty passwordProperty() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password.set(password);
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 }

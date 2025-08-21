@@ -19,4 +19,5 @@ public final class AppConstants {
     // --- MongoDb Constants ---
     public static final String MONGO_URI_KEY = "mongodb_uri";
     public static final String MONGO_DATABASE = "DbPasswordManager";
+    public static final String MONGO_USER_COLLECTION = "users";
 }

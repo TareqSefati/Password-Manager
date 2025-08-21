@@ -1,6 +1,7 @@
 package co.tareq.passwordManager.login;
 
 import co.tareq.passwordManager.MainApp;
+import co.tareq.passwordManager.util.MongoDBConnection;
 import co.tareq.passwordManager.util.PreferenceUtil;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -77,6 +78,8 @@ public class LoginController {
         }else {
             btnLogin.setDisable(false);
             btnRegister.setDisable(false);
+            // Important - set mongodb connection string if it exists.
+            MongoDBConnection.getInstance().setConnectionString(preferenceUtil.getMongoDbUri());
         }
     }
 

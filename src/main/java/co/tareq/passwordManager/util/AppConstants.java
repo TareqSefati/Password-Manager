@@ -13,6 +13,7 @@ public final class AppConstants {
     public static final double MIN_WINDOW_WIDTH = 800.0;
     public static final double MIN_WINDOW_HEIGHT = 600.0;
     public static final String FXML_LOGIN_VIEW = "views/login.fxml";
+    public static final String FXML_REGISTRATION_VIEW = "views/registration.fxml";
     public static final String FXML_URI_SETTING_VIEW = "views/uriSetting.fxml";
 
     // --- MongoDb Constants ---

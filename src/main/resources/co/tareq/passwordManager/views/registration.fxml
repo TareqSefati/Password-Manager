@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
@@ -12,22 +13,46 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.tareq.passwordManager.uriSetting.UriSettingController">
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.tareq.passwordManager.registration.RegistrationController">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Set MongoDB URI">
+            <Label text="User Registration">
                <VBox.margin>
-                  <Insets bottom="20.0" top="50.0" />
+                  <Insets bottom="5.0" top="30.0" />
                </VBox.margin>
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <JFXTextField fx:id="mongoDbUri" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="450.0" promptText="MongoDB URI (mongodb+srv://user:pass@cluster.mongodb.net/dbname?)" VBox.vgrow="NEVER" />
+            <HBox alignment="CENTER" VBox.vgrow="NEVER">
+               <children>
+                  <JFXTextField fx:id="username" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Choose a username" />
+                  <Label fx:id="lblUsernameError" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <JFXTextField fx:id="email" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Email" />
+                  <Label fx:id="lblEmailError" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <JFXPasswordField fx:id="password" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Enter Master Password" />
+                  <Label fx:id="lblPasswordError" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="196.0">
+               <children>
+                  <JFXPasswordField fx:id="confirmPassword" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Confirm Master Password" />
+                  <Label fx:id="lblConfirmPasswordError" />
+               </children>
+            </HBox>
             <HBox alignment="CENTER" spacing="20.0">
                <children>
-                  <JFXButton fx:id="btnSaveUri" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onSaveUriAction" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Save URI">
+                  <JFXButton fx:id="btnRegister" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onRegisterAction" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Register Account">
                      <ripplerFill>
                         <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                            <stops>
@@ -43,23 +68,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </JFXButton>
-                  <JFXButton fx:id="btnTestConnection" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onTestConnectionAction" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Test Connection">
-                     <ripplerFill>
-                        <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
-                           <stops>
-                              <Stop color="#0bead0" />
-                              <Stop color="#160d97cc" offset="1.0" />
-                           </stops>
-                        </RadialGradient>
-                     </ripplerFill>
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </JFXButton>
-                  <JFXButton fx:id="btnDeleteUri" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onDeleteUriAction" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Delete URI">
+                  <JFXButton fx:id="btnClearFields" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onClearFieldsAction" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Clear Fields">
                      <ripplerFill>
                         <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                            <stops>
@@ -76,9 +85,6 @@
                      </cursor>
                   </JFXButton>
                </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
             </HBox>
             <JFXButton fx:id="btnBackToLogin" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onBackToLoginAction" prefHeight="40.0" prefWidth="350.0" style="-fx-background-color: #49705f; -fx-background-radius: 6;" text="Back to Login" textFill="WHITE">
                <ripplerFill>

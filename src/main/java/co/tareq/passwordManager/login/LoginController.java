@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 
 import java.io.IOException;
 
+import static co.tareq.passwordManager.util.AppConstants.FXML_REGISTRATION_VIEW;
 import static co.tareq.passwordManager.util.AppConstants.FXML_URI_SETTING_VIEW;
 
 /**
@@ -51,7 +52,12 @@ public class LoginController {
 
     @FXML
     void onRegisterAction(ActionEvent event) {
-
+        try {
+            MainApp.setRoot(FXML_REGISTRATION_VIEW);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Registration Error", "An error occurred during opening Registration: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -59,7 +65,7 @@ public class LoginController {
         try {
             MainApp.setRoot(FXML_URI_SETTING_VIEW);
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Setting Error", "An error occurred during URI setting: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Setting Error", "An error occurred during opening URI setting: " + e.getMessage());
             e.printStackTrace();
         }
     }

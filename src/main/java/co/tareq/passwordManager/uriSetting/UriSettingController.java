@@ -50,7 +50,7 @@ public class UriSettingController {
         try {
             MainApp.setRoot(FXML_LOGIN_VIEW);
         } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Setting Error", "An error occurred during URI setting: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Login Error", "An error occurred during back to Login UI: " + e.getMessage());
             e.printStackTrace();
         }
     }

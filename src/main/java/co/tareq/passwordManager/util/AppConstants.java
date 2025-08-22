@@ -15,6 +15,7 @@ public final class AppConstants {
     public static final String FXML_LOGIN_VIEW = "views/login.fxml";
     public static final String FXML_REGISTRATION_VIEW = "views/registration.fxml";
     public static final String FXML_URI_SETTING_VIEW = "views/uriSetting.fxml";
+    public static final String FXML_APP_DASHBOARD_VIEW = "views/appDashboard.fxml";
 
     // --- MongoDb Constants ---
     public static final String MONGO_URI_KEY = "mongodb_uri";

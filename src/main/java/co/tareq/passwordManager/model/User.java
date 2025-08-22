@@ -1,6 +1,5 @@
-package co.tareq.passwordManager.registration;
+package co.tareq.passwordManager.model;
 
-import javafx.beans.property.StringProperty;
 import lombok.*;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
@@ -15,7 +14,7 @@ import org.bson.types.ObjectId;
 @Getter
 @Setter
 @ToString
-public class RegUser {
+public class User {
 
     @BsonId
     private ObjectId id;

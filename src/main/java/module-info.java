@@ -18,10 +18,13 @@ module co.tareq.passwordmanager {
     opens co.tareq.passwordManager.registration to javafx.fxml;
     opens co.tareq.passwordManager.uriSetting to javafx.fxml;
     opens co.tareq.passwordManager.service to javafx.fxml;
+    opens co.tareq.passwordManager.model to javafx.fxml;
 
     exports co.tareq.passwordManager;
     exports co.tareq.passwordManager.login;
     exports co.tareq.passwordManager.uriSetting;
     exports co.tareq.passwordManager.registration;
+    exports co.tareq.passwordManager.model;
+    exports co.tareq.passwordManager.dashboard;
 
 }

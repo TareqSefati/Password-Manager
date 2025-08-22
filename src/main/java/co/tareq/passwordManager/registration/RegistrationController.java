@@ -1,6 +1,7 @@
 package co.tareq.passwordManager.registration;
 
 import co.tareq.passwordManager.MainApp;
+import co.tareq.passwordManager.model.User;
 import co.tareq.passwordManager.service.UserService;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -59,7 +60,7 @@ public class RegistrationController {
     private JFXButton btnBackToLogin;
 
     // Registration Model User instance
-    private RegUser user = new RegUser();
+    private User user = new User();
     private final UserService userService;
 
     // Regex patterns
@@ -182,7 +183,7 @@ public class RegistrationController {
         String passwordText = password.getText();
         try {
             // Attempt to register the user via the UserService
-            RegUser registeredUser = userService.registerUser(usernameText, emailText, passwordText);
+            User registeredUser = userService.registerUser(usernameText, emailText, passwordText);
             System.out.println(registeredUser);
             showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Your account has been created! You can now log in.");
             MainApp.setRoot(FXML_LOGIN_VIEW); // Navigate back to the Login screen

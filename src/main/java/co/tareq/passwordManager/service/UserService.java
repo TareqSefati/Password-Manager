@@ -1,6 +1,6 @@
 package co.tareq.passwordManager.service;
 
-import co.tareq.passwordManager.registration.RegUser;
+import co.tareq.passwordManager.model.User;
 import co.tareq.passwordManager.util.EncryptionUtil;
 import co.tareq.passwordManager.util.MongoDBConnection;
 import com.mongodb.client.MongoCollection;
@@ -19,25 +19,43 @@ import static co.tareq.passwordManager.util.AppConstants.MONGO_USER_COLLECTION;
  */
 public class UserService {
 
-    private final MongoCollection<RegUser> usersCollection;
-
-    public UserService() {
-        this.usersCollection = MongoDBConnection.getInstance().getDatabase().getCollection(MONGO_USER_COLLECTION, RegUser.class);
+    private MongoCollection<User> usersCollection;
+    private MongoCollection<User> getUsersCollection() {
+        if (usersCollection != null){
+            return usersCollection;
+        }
+        usersCollection = MongoDBConnection.getInstance().getDatabase().getCollection(MONGO_USER_COLLECTION, User.class);
+        return usersCollection;
     }
 
-    public RegUser registerUser(String username, String email, String masterPassword) throws Exception{
+    public User registerUser(String username, String email, String masterPassword) throws Exception{
         if (getUserByUsername(username) != null) {
             throw new IllegalArgumentException("Username already exists.");
         }
         byte[] salt = EncryptionUtil.generateSalt();
         String hashedPassword = hashPassword(masterPassword.toCharArray(), salt);
-        RegUser newRegUser = new RegUser(null, username, email, hashedPassword, Base64.getEncoder().encodeToString(salt));
-        usersCollection.insertOne(newRegUser);
-        return newRegUser;
+        User newUser = new User(null, username, email, hashedPassword, Base64.getEncoder().encodeToString(salt));
+        getUsersCollection().insertOne(newUser);
+        return newUser;
     }
 
-    private RegUser getUserByUsername(String username) {
-        return usersCollection.find(Filters.eq("username", username)).first();
+    public User authenticateUser(String username, char[] masterPassword) throws Exception{
+        User user = getUserByUsername(username);
+        if (user == null) {
+            return null; // User not found
+        }
+        byte[] salt = Base64.getDecoder().decode(user.getSalt());
+        String hashedPasswordAttempt = hashPassword(masterPassword, salt);
+
+        if (hashedPasswordAttempt.equals(user.getPassword())) {
+            return user; // Authentication successful
+        } else {
+            return null; // Invalid password
+        }
+    }
+
+    private User getUserByUsername(String username) {
+        return getUsersCollection().find(Filters.eq("username", username)).first();
     }
 
     // Helper to hash password using PBKDF2

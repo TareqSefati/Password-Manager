@@ -1,11 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.tareq.passwordManager.dashboard.AppDashboardController">
-   <children>
-      <Label layoutX="242.0" layoutY="191.0" text="This is app dashboard" />
-   </children>
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.tareq.passwordManager.dashboard.AppDashboardController">
+   <top>
+      <JFXToolbar BorderPane.alignment="CENTER">
+         <center>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </center>
+         <right>
+            <MenuBar nodeOrientation="RIGHT_TO_LEFT" BorderPane.alignment="CENTER">
+              <menus>
+                <Menu id="userMenu" fx:id="userMenu" mnemonicParsing="false" text="Hi User">
+                  <items>
+                    <MenuItem fx:id="profileMenuItem" mnemonicParsing="false" text="Profile" />
+                        <MenuItem fx:id="changePasswordMenuItem" mnemonicParsing="false" text="Change Password" />
+                        <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                  </items>
+                </Menu>
+              </menus>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MenuBar>
+         </right>
+      </JFXToolbar>
+   </top>
+   <center>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" spacing="5.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="40.0" prefWidth="400.0" spacing="20.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Label prefHeight="36.0" prefWidth="221.0" text="My Passwords" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="25.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <JFXButton fx:id="btnAddEntry" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onAddEntryAction" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Add New Entry" HBox.hgrow="ALWAYS">
+                           <ripplerFill>
+                              <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
+                                 <stops>
+                                    <Stop color="#0bead0" />
+                                    <Stop color="#160d97cc" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <TableView prefHeight="477.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Title" />
+                      <TableColumn prefWidth="149.60003662109375" text="Username" />
+                        <TableColumn prefWidth="127.19996643066406" text="URL" />
+                        <TableColumn prefWidth="48.0" text="SSO" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="400.0" spacing="40.0" VBox.vgrow="NEVER">
+                     <children>
+                        <JFXButton buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Edit Selected" HBox.hgrow="ALWAYS">
+                           <ripplerFill>
+                              <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
+                                 <stops>
+                                    <Stop color="#0bead0" />
+                                    <Stop color="#160d97cc" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </JFXButton>
+                        <JFXButton buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Delete Selected" HBox.hgrow="ALWAYS">
+                           <ripplerFill>
+                              <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
+                                 <stops>
+                                    <Stop color="#0bead0" />
+                                    <Stop color="#160d97cc" offset="1.0" />
+                                 </stops>
+                              </RadialGradient>
+                           </ripplerFill>
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="400.0" style="-fx-border-color: transparent transparent transparent blue;" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+   </center>
+</BorderPane>

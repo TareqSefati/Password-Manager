@@ -1,7 +1,9 @@
 package co.tareq.passwordManager.login;
 
 import co.tareq.passwordManager.MainApp;
+import co.tareq.passwordManager.dashboard.AppDashboardController;
 import co.tareq.passwordManager.model.User;
+import co.tareq.passwordManager.service.PasswordEntryService;
 import co.tareq.passwordManager.service.UserService;
 import co.tareq.passwordManager.util.EncryptionUtil;
 import co.tareq.passwordManager.util.MongoDBConnection;
@@ -41,10 +43,12 @@ public class LoginController {
 
     private final PreferenceUtil preferenceUtil;
     private final UserService userService;
+    private final PasswordEntryService passwordEntryService;
 
     public LoginController(){
         preferenceUtil = new PreferenceUtil();
         userService = new UserService();
+        passwordEntryService = new PasswordEntryService();
     }
 
     @FXML
@@ -69,11 +73,11 @@ public class LoginController {
                 SecretKey encryptionKey = EncryptionUtil.deriveKeyFromPassword(Arrays.toString(masterPassword),
                         Base64.getDecoder().decode(authenticatedUser.getSalt()));
 
-//                passwordEntryService.setMasterEncryptionKey(encryptionKey);
+                passwordEntryService.setMasterEncryptionKey(encryptionKey);
 
                 // Store current user ID globally or pass it to MainAppController
                 // For simplicity, we'll pass it to MainAppController in this example
-//                MainAppController.setCurrentUserId(authenticatedUser.getId().toHexString());
+                AppDashboardController.setCurrentUser(authenticatedUser);
 
                 showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome, " + usernameText + "!");
                 MainApp.setRoot(FXML_APP_DASHBOARD_VIEW); // Navigate to the main application view

@@ -4,6 +4,7 @@ import co.tareq.passwordManager.MainApp;
 import co.tareq.passwordManager.model.PasswordEntry;
 import co.tareq.passwordManager.model.User;
 import co.tareq.passwordManager.service.PasswordEntryService;
+import co.tareq.passwordManager.util.Toast;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,11 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -93,6 +98,18 @@ public class AppDashboardController {
     @FXML
     private JFXTextArea lblNotesText;
 
+    @FXML
+    private JFXButton btnUsernameCopy;
+
+    @FXML
+    private JFXButton btnPasswordCopy;
+
+    @FXML
+    private JFXButton btnUriCopy;
+
+    @FXML
+    private JFXButton btnUriGoto;
+
     private static User currentUser; // Stores the logged-in user
     private final PasswordEntryService passwordEntryService;
     private ObservableList<PasswordEntry> masterPasswordEntries;
@@ -114,6 +131,11 @@ public class AppDashboardController {
         // Add listener for table selection changes to display details
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showEntryDetails(newValue));
+
+        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
+        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
+        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
+        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 16);
     }
 
     @FXML
@@ -145,6 +167,25 @@ public class AppDashboardController {
             showAlert(Alert.AlertType.ERROR, "Add Entry Error", "An error occurred during opening Add entry window: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    void onUsernameCopyAction(ActionEvent event) {
+        copyDataFrom(lblUsernameText.getText(), event);
+    }
+
+    @FXML
+    void onPasswordCopyAction(ActionEvent event) {
+        copyDataFrom(lblPasswordText.getText(), event);
+    }
+    @FXML
+    void onUriCopyAction(ActionEvent event) {
+        copyDataFrom(lblUrlText.getText(), event);
+    }
+
+    @FXML
+    void onUriGotoAction(ActionEvent event) {
+
     }
 
     private void constructUsernameButton() {
@@ -243,6 +284,28 @@ public class AppDashboardController {
         imgQrCode.setImage(null);
 //        showPasswordButton.setVisible(false);
 //        showPasswordButton.setUserData(null);
+    }
+
+    private void setIcon(JFXButton btnUsernameCopy, FontAwesome iconName, Color iconColor, int iconSize) {
+        FontIcon icon = new FontIcon();
+        icon.setIconLiteral(iconName.getDescription());
+        icon.setFill(iconColor);
+        icon.setIconSize(iconSize);
+        btnUsernameCopy.setGraphic(icon);
+    }
+
+
+    private void copyDataFrom(String data, ActionEvent event) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(data);
+        clipboard.setContent(content);
+
+        // Show toast after copy data
+        if (event != null) {
+            Stage stg = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Toast.show(stg, "Text Copied! ✅", 2000);
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

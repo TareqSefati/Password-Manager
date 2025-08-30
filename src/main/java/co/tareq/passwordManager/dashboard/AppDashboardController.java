@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import static co.tareq.passwordManager.util.AppConstants.FXML_ENTRY_DETAILS_VIEW;
 import static co.tareq.passwordManager.util.AppConstants.FXML_LOGIN_VIEW;
@@ -57,6 +58,12 @@ public class AppDashboardController {
 
     @FXML
     private JFXButton btnAddEntry;
+
+    @FXML
+    private JFXButton btnEdit;
+
+    @FXML
+    private JFXButton btnDelete;
 
     @FXML
     private TableView<PasswordEntry> tableView;
@@ -137,40 +144,54 @@ public class AppDashboardController {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showEntryDetails(newValue));
 
-        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
-        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
-        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 16);
-        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 16);
+        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 12);
+
+        // --- 4. Bind the buttons to the binding ---
+        btnEdit.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        btnDelete.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+
+        clearEntryDetails();
     }
 
     @FXML
     void onAddEntryAction(ActionEvent event) {
-        try {
-//            MainApp.setRoot(FXML_ENTRY_DETAILS_VIEW);
-            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource(FXML_ENTRY_DETAILS_VIEW));
+        loadEntryDetailsView(null);
+    }
 
-            // IMPORTANT: Create a ControllerFactory to pass the user to the constructor
-            loader.setControllerFactory(param -> {
-                if (param.equals(EntryDetailsController.class)) {
-                    return new EntryDetailsController(currentUser, this.passwordEntryService);
-                }
+    @FXML
+    void onDeleteAction(ActionEvent event) {
+        PasswordEntry selectedEntry = tableView.getSelectionModel().getSelectedItem();
+        if (selectedEntry != null) {
+            Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmAlert.setTitle("Confirm Deletion");
+            confirmAlert.setHeaderText(null);
+            confirmAlert.setContentText("Are you sure you want to delete this entry: " + selectedEntry.getTitle() + "?");
+
+            Optional<ButtonType> result = confirmAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 try {
-                    return param.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    showAlert(Alert.AlertType.ERROR, "Add Entry Error", "An error occurred during opening Add entry window: " + e.getMessage());
+                    passwordEntryService.deleteEntry(selectedEntry.getId());
+                    masterPasswordEntries.remove(selectedEntry); // Update UI directly for immediate feedback
+                    clearEntryDetails(); // Clear details pane
+                    Toast.show(event, "❌ 🗑 - Deletion Successful!", 2000);
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Deletion Error", "Failed to delete entry: " + e.getMessage());
                     e.printStackTrace();
-                    throw new RuntimeException("Failed to create controller: " + param.getName(), e);
                 }
-            });
-            Parent root = loader.load();
-            Stage primaryStage = MainApp.getPrimaryStage();
-            primaryStage.setResizable(true);
-            primaryStage.setScene(new Scene(root));
-            primaryStage.sizeToScene(); // Adjust stage size to content
-            primaryStage.centerOnScreen(); // Center the stage
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Add Entry Error", "An error occurred during opening Add entry window: " + e.getMessage());
-            e.printStackTrace();
+            }
+        } else {
+            Toast.show(event, "Please select entry!", 2000);
+        }
+    }
+
+    @FXML
+    void onEditAction(ActionEvent event) {
+        PasswordEntry selectedEntry = tableView.getSelectionModel().getSelectedItem();
+        if (selectedEntry != null) {
+            loadEntryDetailsView(selectedEntry);
         }
     }
 
@@ -342,6 +363,34 @@ public class AppDashboardController {
         // Show toast after copy data
         if (event != null) {
             Toast.show(event, "Text Copied! ✅", 2000);
+        }
+    }
+
+    private void loadEntryDetailsView(PasswordEntry selectedEntry) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MainApp.class.getResource(FXML_ENTRY_DETAILS_VIEW));
+            // IMPORTANT: Create a ControllerFactory to pass the user to the constructor
+            loader.setControllerFactory(param -> {
+                if (param.equals(EntryDetailsController.class)) {
+                    return new EntryDetailsController(currentUser, this.passwordEntryService, selectedEntry);
+                }
+                try {
+                    return param.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    showAlert(Alert.AlertType.ERROR, "Add Entry Error", "An error occurred during opening Add entry window: " + e.getMessage());
+                    e.printStackTrace();
+                    throw new RuntimeException("Failed to create controller: " + param.getName(), e);
+                }
+            });
+            Parent root = loader.load();
+            Stage primaryStage = MainApp.getPrimaryStage();
+            primaryStage.setResizable(true);
+            primaryStage.setScene(new Scene(root));
+            primaryStage.sizeToScene(); // Adjust stage size to content
+            primaryStage.centerOnScreen(); // Center the stage
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Add Entry Error", "An error occurred during opening Add entry window: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

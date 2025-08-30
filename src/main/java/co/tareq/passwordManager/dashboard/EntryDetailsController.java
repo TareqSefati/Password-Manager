@@ -1,6 +1,7 @@
 package co.tareq.passwordManager.dashboard;
 
 import co.tareq.passwordManager.MainApp;
+import co.tareq.passwordManager.model.PasswordEntry;
 import co.tareq.passwordManager.model.User;
 import co.tareq.passwordManager.service.PasswordEntryService;
 import co.tareq.passwordManager.util.Toast;
@@ -53,11 +54,17 @@ public class EntryDetailsController {
 
     private final PasswordEntryService passwordEntryService;
     private final User currentUser;
+    private PasswordEntry selectedEntry;
     private BooleanProperty isTitleValid = new SimpleBooleanProperty(false);
 
-    public EntryDetailsController(User loggedinUser, PasswordEntryService passwordEntryService) {
+    public EntryDetailsController(
+            User loggedinUser, PasswordEntryService passwordEntryService, PasswordEntry entry
+    ) {
         this.passwordEntryService = passwordEntryService;
         this.currentUser = loggedinUser;
+        if (entry != null) {
+            this.selectedEntry = entry;
+        }
     }
     @FXML
     public void initialize() {
@@ -69,6 +76,9 @@ public class EntryDetailsController {
         btnSaveEntry.disableProperty().bind(isTitleValid.not());
         usernameField.visibleProperty().bind(ssoCheckbox.selectedProperty().not());
         passwordField.visibleProperty().bind(ssoCheckbox.selectedProperty().not());
+        if (selectedEntry != null) {
+            loadFieldsData(selectedEntry);
+        }
     }
 
     @FXML
@@ -128,30 +138,20 @@ public class EntryDetailsController {
         // Use a char array for password for security before passing to service
         char[] passwordChars = password.toCharArray();
         try {
-//            if ("create".equals(mode)) {
-//                passwordEntryService.createEntry(currentUserId, title, isSso, username, password, url, notes);
-//                showAlert(Alert.AlertType.INFORMATION, "Success", "Entry created successfully!");
-//            } else if ("edit".equals(mode) && currentEntry != null) {
-//                passwordEntryService.updateEntry(currentEntry, title, isSso, username, password, url, notes);
-//                showAlert(Alert.AlertType.INFORMATION, "Success", "Entry updated successfully!");
-//            }
-//            this.savedSuccessfully = true; // Mark as saved on success
-//            if (currentStage != null) {
-//                currentStage.close(); // Close the window only on successful save
-//            }
-//            System.out.println("Current user in entry detail window: " + currentUser);
-            boolean isSucceed = passwordEntryService.createEntry(currentUser.getId().toHexString(), title, isSso, username, password, url, notes);
+            boolean isSucceed = passwordEntryService.createEntry(currentUser.getId().toHexString(), title, isSso, username, password, url, notes, selectedEntry);
             if (isSucceed) {
-                Toast.show(event, "Entry Insertion Successful! 🚀👍✅", 2000);
+                if (selectedEntry != null) {
+                    Toast.show(event, "Entry Updated Successful! 🚀👍✅", 2000);
+                }else {
+                    Toast.show(event, "Entry Insertion Successful! 🚀👍✅", 2000);
+                }
                 clearFields();
             }else {
                 showAlert(Alert.AlertType.ERROR, "Failed!", "Entry Insertion failed!!!");
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Operation Failed", "An error occurred: " + e.getMessage());
-            e.printStackTrace(); // Print full stack trace for debugging
-            //this.savedSuccessfully = false; // Mark as not saved on error
-            // Do not close the window on error, allow user to see the alert
+            e.printStackTrace();
         } finally {
             // Crucial: Clear sensitive password data from memory after use
             Arrays.fill(passwordChars, ' ');
@@ -170,6 +170,20 @@ public class EntryDetailsController {
         usernameField.clear();
         passwordField.clear();
         notesField.clear();
+    }
+
+    private void loadFieldsData(PasswordEntry selectedEntry) {
+        try {
+            titleField.setText(selectedEntry.getTitle());
+            urlField.setText(passwordEntryService.getDecryptedData(selectedEntry.getUrl()));
+            ssoCheckbox.setSelected(selectedEntry.isSsoBasedLogin());
+            usernameField.setText(passwordEntryService.getDecryptedData(selectedEntry.getUsername()));
+            passwordField.setText(passwordEntryService.getDecryptedData(selectedEntry.getPassword()));
+            notesField.setText(passwordEntryService.getDecryptedData(selectedEntry.getNotes()));
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Operation Failed", "An error occurred during load fields data." + e.getMessage());
+            e.printStackTrace();
+        }
     }
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);

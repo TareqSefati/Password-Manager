@@ -5,8 +5,12 @@ import co.tareq.passwordManager.util.EncryptionUtil;
 import co.tareq.passwordManager.util.MongoDBConnection;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +37,15 @@ public class PasswordEntryService {
         masterEncryptionKey = key;
     }
 
-    public boolean createEntry(String userId, String title, boolean ssoBasedLogin, String username, String password, String url, String notes) throws Exception {
+    public boolean createEntry(
+            String userId,
+            String title,
+            boolean ssoBasedLogin,
+            String username,
+            String password,
+            String url,
+            String notes,
+            PasswordEntry selectedEntry) throws Exception {
         checkMasterKey();
 
         PasswordEntry entry = new PasswordEntry();
@@ -46,9 +58,14 @@ public class PasswordEntryService {
         entry.setPassword(checkAndEncrypt(password));
         entry.setNotes(checkAndEncrypt(notes));
 
-        getPasswordEntryCollection().insertOne(entry);
-//        System.out.println("Created password entry: " + entry);
-        return !entry.getId().toHexString().isEmpty();
+        if (selectedEntry != null) {
+            entry.setUpdatedAt(LocalDateTime.now());
+            UpdateResult updateResult = getPasswordEntryCollection().replaceOne(Filters.eq("_id", selectedEntry.getId()), entry);
+            return updateResult.wasAcknowledged();
+        }else {
+            InsertOneResult insertOneResult = getPasswordEntryCollection().insertOne(entry);
+            return insertOneResult.wasAcknowledged();
+        }
     }
 
     public List<PasswordEntry> getAllEntriesForUser(String userId) {
@@ -56,6 +73,11 @@ public class PasswordEntryService {
         List<PasswordEntry> passwordEntryList = new ArrayList<>();
         getPasswordEntryCollection().find(Filters.eq("userId", userId)).into(passwordEntryList);
         return passwordEntryList;
+    }
+
+    public void deleteEntry(ObjectId entryId) {
+        checkMasterKey();
+        getPasswordEntryCollection().deleteOne(Filters.eq("_id", entryId));
     }
 
     public String getDecryptedData(String encryptedData) throws Exception {

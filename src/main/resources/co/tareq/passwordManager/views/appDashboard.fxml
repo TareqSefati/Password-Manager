@@ -110,7 +110,7 @@
                   </TableView>
                   <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="400.0" spacing="40.0" VBox.vgrow="NEVER">
                      <children>
-                        <JFXButton buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Edit Selected" HBox.hgrow="ALWAYS">
+                        <JFXButton fx:id="btnEdit" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onEditAction" style="-fx-background-color: #72B095; -fx-background-radius: 6;" text="Edit Selected" HBox.hgrow="ALWAYS">
                            <ripplerFill>
                               <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                                  <stops>
@@ -126,7 +126,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </JFXButton>
-                        <JFXButton buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Delete Selected" HBox.hgrow="ALWAYS">
+                        <JFXButton fx:id="btnDelete" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onDeleteAction" style="-fx-background-color: #C0C0C0; -fx-background-radius: 6;" text="Delete Selected" HBox.hgrow="ALWAYS">
                            <ripplerFill>
                               <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                                  <stops>
@@ -256,31 +256,31 @@
                         </Label>
                         <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
-                              <JFXButton fx:id="btnUsernameCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onUsernameCopyAction" prefHeight="28.0" prefWidth="28.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
+                              <JFXButton fx:id="btnUsernameCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onUsernameCopyAction" prefHeight="20.0" prefWidth="20.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
                               <Label fx:id="lblUsernameText" text="Label">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font size="13.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
-                              <JFXButton fx:id="btnPasswordCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onPasswordCopyAction" prefHeight="28.0" prefWidth="28.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
+                              <JFXButton fx:id="btnPasswordCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onPasswordCopyAction" prefHeight="20.0" prefWidth="20.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
                               <Label fx:id="lblPasswordText" text="Label">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font size="13.0" />
                                  </font>
                               </Label>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
-                              <JFXButton fx:id="btnUriCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onUriCopyAction" prefHeight="28.0" prefWidth="28.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
-                              <JFXButton fx:id="btnUriGoto" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="11.0" onAction="#onUriGotoAction" prefHeight="28.0" prefWidth="28.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
+                              <JFXButton fx:id="btnUriCopy" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" onAction="#onUriCopyAction" prefHeight="20.0" prefWidth="20.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
+                              <JFXButton fx:id="btnUriGoto" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY" layoutX="10.0" layoutY="11.0" onAction="#onUriGotoAction" prefHeight="20.0" prefWidth="20.0" style="-fx-border-color: #5197da; -fx-border-radius: 5;" />
                               <Label fx:id="lblUrlText" text="Label">
                                  <font>
-                                    <Font size="15.0" />
+                                    <Font size="13.0" />
                                  </font>
                               </Label>
                            </children>
@@ -290,17 +290,17 @@
                               <Insets left="5.0" />
                            </GridPane.margin>
                            <font>
-                              <Font size="15.0" />
+                              <Font size="13.0" />
                            </font>
                         </Label>
                         <Label fx:id="lblCreatedAtText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8">
                            <font>
-                              <Font size="15.0" />
+                              <Font size="13.0" />
                            </font>
                         </Label>
                         <Label fx:id="lblUpdatedAtText" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9">
                            <font>
-                              <Font size="15.0" />
+                              <Font size="13.0" />
                            </font>
                         </Label>
                         <ImageView fx:id="imgQrCode" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="6">

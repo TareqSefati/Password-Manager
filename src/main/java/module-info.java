@@ -10,6 +10,7 @@ module co.tareq.passwordmanager {
     requires static lombok;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.fontawesome;
+    requires java.desktop;
 
 
 //    opens java.lang.reflect to com.jfoenix;

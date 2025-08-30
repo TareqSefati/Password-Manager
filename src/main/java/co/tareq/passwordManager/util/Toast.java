@@ -2,8 +2,10 @@ package co.tareq.passwordManager.util;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -60,5 +62,10 @@ public class Toast {
         fadeOut.setDelay(Duration.millis(durationMs)); // Delay before fading out
         fadeOut.setOnFinished(e -> toastStage.close()); // Close stage after fade out
         fadeOut.play();
+    }
+
+    public static void show(ActionEvent event, String message, int durationMs) {
+        Stage stg = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Toast.show(stg, message, durationMs);
     }
 }

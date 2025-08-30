@@ -14,9 +14,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -27,7 +29,10 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static co.tareq.passwordManager.util.AppConstants.FXML_ENTRY_DETAILS_VIEW;
@@ -185,7 +190,40 @@ public class AppDashboardController {
 
     @FXML
     void onUriGotoAction(ActionEvent event) {
+        String urlText = lblUrlText.getText();
 
+        // Check if the URL string has a protocol, and add one if it doesn't
+        if (!urlText.startsWith("http://") && !urlText.startsWith("https://")) {
+            urlText = "http://" + urlText;
+        }
+        try {
+            // Check if the Desktop API is supported on the current platform
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                // Check if the browse action is supported
+                if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                    URI uri = new URI(urlText);
+                    desktop.browse(uri);
+                    Toast.show(event, "Opening URL in Browser 💻🌐", 1000);
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Browse action is not supported on this platform.");
+                }
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Desktop is not supported on this platform.");
+            }
+        } catch (IOException e) {
+            // Handle cases where the browser cannot be launched
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open URL. Please check your system configuration.");
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            // Handle cases where the URL is invalid
+            showAlert(Alert.AlertType.ERROR, "Error", "The URL is invalid. Please enter a valid address.");
+            e.printStackTrace();
+        } catch (UnsupportedOperationException e) {
+            // Handle cases where the required feature is not supported
+            showAlert(Alert.AlertType.ERROR, "Error", "This feature is not supported on your operating system.");
+            e.printStackTrace();
+        }
     }
 
     private void constructUsernameButton() {
@@ -303,8 +341,7 @@ public class AppDashboardController {
 
         // Show toast after copy data
         if (event != null) {
-            Stage stg = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Toast.show(stg, "Text Copied! ✅", 2000);
+            Toast.show(event, "Text Copied! ✅", 2000);
         }
     }
 

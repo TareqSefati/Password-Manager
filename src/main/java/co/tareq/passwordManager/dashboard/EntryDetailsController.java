@@ -3,6 +3,7 @@ package co.tareq.passwordManager.dashboard;
 import co.tareq.passwordManager.MainApp;
 import co.tareq.passwordManager.model.User;
 import co.tareq.passwordManager.service.PasswordEntryService;
+import co.tareq.passwordManager.util.Toast;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextArea;
@@ -141,7 +142,7 @@ public class EntryDetailsController {
 //            System.out.println("Current user in entry detail window: " + currentUser);
             boolean isSucceed = passwordEntryService.createEntry(currentUser.getId().toHexString(), title, isSso, username, password, url, notes);
             if (isSucceed) {
-                showAlert(Alert.AlertType.INFORMATION, "Success!", "Entry Insertion successful!!!");
+                Toast.show(event, "Entry Insertion Successful! 🚀👍✅", 2000);
                 clearFields();
             }else {
                 showAlert(Alert.AlertType.ERROR, "Failed!", "Entry Insertion failed!!!");

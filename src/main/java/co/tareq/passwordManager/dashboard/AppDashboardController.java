@@ -253,10 +253,11 @@ public class AppDashboardController {
         }else {
             userMenu.setText("Hi, " + currentUser.getUsername());
         }
-        FontIcon icon = new FontIcon();
-        icon.setIconLiteral(FontAwesome.ARROW_CIRCLE_O_DOWN.getDescription());
-        icon.setIconSize(16);
-        userMenu.setGraphic(icon);
+
+        setMenuIcon(userMenu, FontAwesome.ARROW_CIRCLE_O_DOWN.getDescription());
+        setMenuIcon(profileMenuItem, FontAwesome.USER_CIRCLE_O.getDescription());
+        setMenuIcon(changePasswordMenuItem, FontAwesome.KEY.getDescription());
+        setMenuIcon(logoutMenuItem, FontAwesome.SIGN_OUT.getDescription());
     }
 
     private void loadPasswordEntries() {
@@ -345,14 +346,20 @@ public class AppDashboardController {
 //        showPasswordButton.setUserData(null);
     }
 
-    private void setIcon(JFXButton btnUsernameCopy, FontAwesome iconName, Color iconColor, int iconSize) {
+    private void setIcon(JFXButton button, FontAwesome iconName, Color iconColor, int iconSize) {
         FontIcon icon = new FontIcon();
         icon.setIconLiteral(iconName.getDescription());
         icon.setFill(iconColor);
         icon.setIconSize(iconSize);
-        btnUsernameCopy.setGraphic(icon);
+        button.setGraphic(icon);
     }
 
+    private void setMenuIcon(MenuItem menu, String iconName) {
+        FontIcon icon = new FontIcon();
+        icon.setIconLiteral(iconName);
+        icon.setIconSize(16);
+        menu.setGraphic(icon);
+    }
 
     private void copyDataFrom(String data, ActionEvent event) {
         Clipboard clipboard = Clipboard.getSystemClipboard();

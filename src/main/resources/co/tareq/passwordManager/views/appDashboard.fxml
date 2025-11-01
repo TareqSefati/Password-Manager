@@ -53,7 +53,7 @@
                   <items>
                     <MenuItem fx:id="profileMenuItem" mnemonicParsing="false" text="Profile" />
                         <MenuItem fx:id="changePasswordMenuItem" mnemonicParsing="false" text="Change Password" />
-                        <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                        <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#onLogoutAction" text="Logout" />
                   </items>
                 </Menu>
               </menus>

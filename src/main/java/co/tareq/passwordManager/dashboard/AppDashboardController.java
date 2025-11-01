@@ -244,6 +244,20 @@ public class AppDashboardController {
         }
     }
 
+    @FXML
+    void onLogoutAction(ActionEvent event) {
+        try {
+            // Go to login page.
+            MainApp.setRoot(FXML_LOGIN_VIEW);
+            //Clear necessary staff
+            AppDashboardController.currentUser = null;
+            passwordEntryService.setMasterEncryptionKey(null);
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Login Error", "An error occurred during back to Login UI: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void constructUsernameButton() {
         if (currentUser.getUsername().length() > 6) {
             userMenu.setText("Hi, " + currentUser.getUsername().substring(0, 4) + "...");

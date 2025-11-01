@@ -23,6 +23,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -140,9 +141,8 @@ public class AppDashboardController {
         mapColumnData();
         loadPasswordEntries(); // Initial load of data
 
-        // Add listener for table selection changes to display details
-        tableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showEntryDetails(newValue));
+        // Configure table view necessary settings at time of initialization.
+        configureTableView();
 
         // Set the icon of all necessary buttons at the time of initialization.
         initializeButtonGraphics();
@@ -368,6 +368,25 @@ public class AppDashboardController {
         btnPasswordCopy.disableProperty().bind(lblPasswordText.textProperty().isEmpty());
         btnUriCopy.disableProperty().bind(lblUrlText.textProperty().isEmpty());
         btnUriGoto.disableProperty().bind(lblUrlText.textProperty().isEmpty());
+    }
+
+    // Configure table view in one function
+    private void configureTableView() {
+        // Add listener for table selection changes to display details
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showEntryDetails(newValue));
+
+        // Add event filter to implement table view selection clear by 'ESC' key press
+        tableView.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                // Clear the selection model
+                tableView.getSelectionModel().clearSelection();
+                System.out.println("Selection cleared by ESC key.");
+
+                // Optional: Consume the event so it doesn't propagate further
+                event.consume();
+            }
+        });
     }
 
     private void setMenuIcon(MenuItem menu, String iconName) {

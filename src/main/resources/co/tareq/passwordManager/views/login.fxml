@@ -26,7 +26,7 @@
             </Label>
             <JFXTextField fx:id="username" alignment="CENTER" labelFloat="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Username" VBox.vgrow="NEVER" />
             <JFXPasswordField fx:id="password" alignment="CENTER" labelFloat="true" layoutX="160.0" layoutY="58.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Password" />
-            <JFXButton fx:id="btnLogin" buttonType="RAISED" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onLoginAction" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Login">
+            <JFXButton fx:id="btnLogin" buttonType="RAISED" contentDisplay="CENTER" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#onLoginAction" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #7C7AB8; -fx-background-radius: 6;" text="Login">
                <ripplerFill>
                   <RadialGradient centerX="0.4955555386013455" centerY="0.4694656779747883" cycleMethod="REFLECT" radius="0.5">
                      <stops>

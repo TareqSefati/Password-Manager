@@ -144,14 +144,11 @@ public class AppDashboardController {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showEntryDetails(newValue));
 
-        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 12);
+        // Set the icon of all necessary buttons at the time of initialization.
+        initializeButtonGraphics();
 
-        // --- 4. Bind the buttons to the binding ---
-        btnEdit.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
-        btnDelete.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        // Toggle enable or disable button based on business logic or conditions
+        configureDisableButtons();
 
         clearEntryDetails();
     }
@@ -276,6 +273,7 @@ public class AppDashboardController {
         }
     }
 
+    //Construct the column cell of Password table in desired data type format.
     private void mapColumnData() {
         colTitle.setCellValueFactory(cellData -> {
             return new SimpleStringProperty(cellData.getValue().getTitle());
@@ -352,6 +350,24 @@ public class AppDashboardController {
         icon.setFill(iconColor);
         icon.setIconSize(iconSize);
         button.setGraphic(icon);
+    }
+
+    // Setup all button icons at the time of initialization in one function.
+    private void initializeButtonGraphics() {
+        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 12);
+    }
+
+    // Toggle enable or disable button in one function
+    private void configureDisableButtons() {
+        btnEdit.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        btnDelete.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
+        btnUsernameCopy.disableProperty().bind(lblUsernameText.textProperty().isEmpty());
+        btnPasswordCopy.disableProperty().bind(lblPasswordText.textProperty().isEmpty());
+        btnUriCopy.disableProperty().bind(lblUrlText.textProperty().isEmpty());
+        btnUriGoto.disableProperty().bind(lblUrlText.textProperty().isEmpty());
     }
 
     private void setMenuIcon(MenuItem menu, String iconName) {

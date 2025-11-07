@@ -178,6 +178,9 @@ public class LoginController {
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
+        // JavaFX UI component MUST be executed on the JavaFX Application Thread.
+        // If we don't use Platform.runLater() then it will be executed by "DB-Task-Worker" thread
+        // which causes error.
         Platform.runLater(() -> {
             Alert alert = new Alert(type);
             alert.setTitle(title);
@@ -192,6 +195,9 @@ public class LoginController {
      * @param isLoading true if the task is running; false otherwise.
      */
     private void setUIState(boolean isLoading) {
+        // JavaFX UI component MUST be executed on the JavaFX Application Thread.
+        // If we don't use Platform.runLater() then it will be executed by "DB-Task-Worker" thread
+        // which causes error.
         Platform.runLater(() -> {
             progressIndicator.setVisible(isLoading);
             btnLogin.setDisable(isLoading);

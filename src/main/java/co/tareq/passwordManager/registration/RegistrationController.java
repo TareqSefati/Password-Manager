@@ -6,18 +6,23 @@ import co.tareq.passwordManager.service.UserService;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 import static co.tareq.passwordManager.util.AppConstants.FXML_LOGIN_VIEW;
@@ -59,6 +64,9 @@ public class RegistrationController {
     @FXML
     private JFXButton btnBackToLogin;
 
+    @FXML
+    private ProgressIndicator progressIndicator;
+
     // Registration Model User instance
     private User user = new User();
     private final UserService userService;
@@ -74,6 +82,19 @@ public class RegistrationController {
     private BooleanProperty isEmailValid = new SimpleBooleanProperty(false);
     private BooleanProperty isPasswordValid = new SimpleBooleanProperty(false);
     private BooleanProperty isConfirmPasswordValid = new SimpleBooleanProperty(false);
+
+    // Executor Service for managing background database operations (Fixed thread pool of 1)
+    private final ExecutorService executor = Executors.newFixedThreadPool(1, r -> {
+        Thread t = Executors.defaultThreadFactory().newThread(r);
+        t.setDaemon(true); // Ensures the thread won't block application shutdown
+        t.setName("DB-Task-Worker");
+        return t;
+    });
+
+    public void shutdownExecutor() {
+        executor.shutdownNow();
+        System.out.println("Is executor shutdown: "+ executor.isShutdown());
+    }
 
     public RegistrationController() {
         this.userService = new UserService();
@@ -165,7 +186,8 @@ public class RegistrationController {
         BooleanBinding overallFormValid = isUsernameValid
                 .and(isEmailValid)
                 .and(isPasswordValid)
-                .and(isConfirmPasswordValid);
+                .and(isConfirmPasswordValid)
+                .and(progressIndicator.visibleProperty().not());
 
         btnRegister.disableProperty().bind(overallFormValid.not());
     }
@@ -178,32 +200,68 @@ public class RegistrationController {
 
     @FXML
     void onRegisterAction(ActionEvent event) {
-        String usernameText = username.getText();
-        String emailText = email.getText();
-        String passwordText = password.getText();
-        try {
-            // Attempt to register the user via the UserService
-            User registeredUser = userService.registerUser(usernameText, emailText, passwordText);
-            System.out.println(registeredUser);
-            showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Your account has been created! You can now log in.");
-            MainApp.setRoot(FXML_LOGIN_VIEW); // Navigate back to the Login screen
-        } catch (IllegalArgumentException e) {
-            showAlert(Alert.AlertType.ERROR, "Registration Error", e.getMessage()); // For username already exists
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Registration Error", "An unexpected error occurred during registration: " + e.getMessage());
-            e.printStackTrace(); // Log the full stack trace for debugging
-        } finally {
-            // Crucial: Clear sensitive password data from memory
-            passwordText = null;
-            // Clear UI field
-            clearAllInputFields();
-            clearAllErrorLabel();
+        // Validate inputs
+        if (!(validateUsername() && validateEmail() && validatePassword() && validateConfirmPassword())) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Inputs", "Please provide inputs as per instructions.");
+            return;
         }
+        //Prepare UI for loading state
+        setUIState(true);
+
+        Task<User> registerTask = new Task<>() {
+            @Override
+            protected User call() throws Exception {
+                return userService.registerUser(username.getText(), email.getText(), password.getText());
+            }
+            @Override
+            protected void succeeded() {
+                if (getValue() != null) {
+                    try {
+                        showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Your account has been created! You can now log in.");
+                        MainApp.setRoot(FXML_LOGIN_VIEW); // Navigate back to the Login screen
+                        // Shutdown executor to avoid Resource Leak
+                        shutdownExecutor();
+                    } catch (IOException e){
+                        showAlert(Alert.AlertType.ERROR, "Navigation Error", "Failed to load Login view.");
+                        e.printStackTrace();
+                    }
+                }else {
+                    showAlert(Alert.AlertType.ERROR, "Registration Failed", "Something happened wrong!");
+                }
+            }
+
+            @Override
+            protected void failed() {
+                Throwable e = getException();
+                if (e instanceof IllegalArgumentException) {
+                    showAlert(Alert.AlertType.ERROR, "Registration Error", e.getMessage()); // For username already exists
+                }else {
+                    showAlert(Alert.AlertType.ERROR, "Registration Error", "An unexpected error occurred during registration: " + e.getMessage());
+                    e.printStackTrace(); // Log the full stack trace for debugging
+                }
+            }
+
+            @Override
+            protected void done() {
+                //FINAL CLEANUP (Always runs) ---
+                setUIState(false); // Hide spinner, re-enable UI
+                // JavaFX UI component MUST be executed on the JavaFX Application Thread.
+                // If we don't use Platform.runLater() then it will be executed by "DB-Task-Worker" thread
+                // which causes error.
+                Platform.runLater(()->{
+                    clearAllInputFields();
+                    clearAllErrorLabel();
+                });
+            }
+        };
+        executor.execute(registerTask);
     }
 
     @FXML
     void onBackToLoginAction(ActionEvent event) {
         try {
+            // Shutdown executor to avoid Resource Leak
+            shutdownExecutor();
             MainApp.setRoot(FXML_LOGIN_VIEW);
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Login Error", "An error occurred during back to Login UI: " + e.getMessage());
@@ -256,7 +314,7 @@ public class RegistrationController {
             setIcon(lblPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
             return false;
         } else if (!PASSWORD_PATTERN.matcher(inputPassword).matches()) {
-            lblPasswordError.setText("Contain uppercase, lowercase, number, & special character.");
+            lblPasswordError.setText("Uppercase, lowercase, number & special character");
             setIcon(lblPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
             return false;
         } else {
@@ -307,10 +365,34 @@ public class RegistrationController {
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // JavaFX UI component MUST be executed on the JavaFX Application Thread.
+        // If we don't use Platform.runLater() then it will be executed by "DB-Task-Worker" thread
+        // which causes error.
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+
+    /**
+     * Manages the state of the UI components (locking them during the task).
+     * @param isLoading true if the task is running; false otherwise.
+     */
+    private void setUIState(boolean isLoading) {
+        // JavaFX UI component MUST be executed on the JavaFX Application Thread.
+        // If we don't use Platform.runLater() then it will be executed by "DB-Task-Worker" thread
+        // which causes error.
+        Platform.runLater(() -> {
+            progressIndicator.setVisible(isLoading);
+            username.setDisable(isLoading);
+            email.setDisable(isLoading);
+            password.setDisable(isLoading);
+            confirmPassword.setDisable(isLoading);
+            btnClearFields.setDisable(isLoading);
+            btnBackToLogin.setDisable(isLoading);
+        });
     }
 }

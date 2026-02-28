@@ -27,8 +27,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.awt.*;
 import java.io.IOException;
@@ -265,10 +266,10 @@ public class AppDashboardController {
             userMenu.setText("Hi, " + currentUser.getUsername());
         }
 
-        setMenuIcon(userMenu, FontAwesome.ARROW_CIRCLE_O_DOWN.getDescription());
-        setMenuIcon(profileMenuItem, FontAwesome.USER_CIRCLE_O.getDescription());
-        setMenuIcon(changePasswordMenuItem, FontAwesome.KEY.getDescription());
-        setMenuIcon(logoutMenuItem, FontAwesome.SIGN_OUT.getDescription());
+        setMenuIcon(userMenu, MaterialDesign.MDI_ARROW_DOWN_BOLD_CIRCLE);
+        setMenuIcon(profileMenuItem, MaterialDesign.MDI_ACCOUNT_CIRCLE);
+        setMenuIcon(changePasswordMenuItem, MaterialDesign.MDI_KEY);
+        setMenuIcon(logoutMenuItem, MaterialDesign.MDI_LOGOUT);
     }
 
     private void loadPasswordEntries() {
@@ -358,9 +359,8 @@ public class AppDashboardController {
 //        showPasswordButton.setUserData(null);
     }
 
-    private void setIcon(JFXButton button, FontAwesome iconName, Color iconColor, int iconSize) {
-        FontIcon icon = new FontIcon();
-        icon.setIconLiteral(iconName.getDescription());
+    private void setIcon(JFXButton button, Ikon iconName, Color iconColor, int iconSize) {
+        FontIcon icon = new FontIcon(iconName);
         icon.setFill(iconColor);
         icon.setIconSize(iconSize);
         button.setGraphic(icon);
@@ -368,10 +368,10 @@ public class AppDashboardController {
 
     // Setup all button icons at the time of initialization in one function.
     private void initializeButtonGraphics() {
-        setIcon(btnUsernameCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnPasswordCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnUriCopy, FontAwesome.COPY, Color.BLUEVIOLET, 12);
-        setIcon(btnUriGoto, FontAwesome.LINK, Color.BLUEVIOLET, 12);
+        setIcon(btnUsernameCopy, MaterialDesign.MDI_CONTENT_COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnPasswordCopy, MaterialDesign.MDI_CONTENT_COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriCopy, MaterialDesign.MDI_CONTENT_COPY, Color.BLUEVIOLET, 12);
+        setIcon(btnUriGoto, MaterialDesign.MDI_LINK, Color.BLUEVIOLET, 12);
     }
 
     // Toggle enable or disable button in one function
@@ -403,9 +403,8 @@ public class AppDashboardController {
         });
     }
 
-    private void setMenuIcon(MenuItem menu, String iconName) {
-        FontIcon icon = new FontIcon();
-        icon.setIconLiteral(iconName);
+    private void setMenuIcon(MenuItem menu, Ikon iconName) {
+        FontIcon icon = new FontIcon(iconName);
         icon.setIconSize(16);
         menu.setGraphic(icon);
     }

@@ -17,8 +17,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.paint.Color;
-import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -273,15 +274,15 @@ public class RegistrationController {
         String usernameInput = username.getText();
         if (usernameInput == null || usernameInput.trim().isEmpty()) {
             lblUsernameError.setText("Required!");
-            setIcon(lblUsernameError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblUsernameError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else if (usernameInput.trim().length() < 3 || usernameInput.trim().length() > 15) {
             lblUsernameError.setText("3-15 characters!");
-            setIcon(lblUsernameError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblUsernameError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else {
             lblUsernameError.setText(""); // Clear error
-            setIcon(lblUsernameError, FontAwesome.CHECK_CIRCLE, Color.DARKGREEN, 16);
+            setIcon(lblUsernameError, MaterialDesign.MDI_CHECK_CIRCLE, Color.DARKGREEN, 16);
             return true;
         }
     }
@@ -290,15 +291,15 @@ public class RegistrationController {
         String emailInput = email.getText();
         if (emailInput == null || emailInput.trim().isEmpty()) {
             lblEmailError.setText("Required!");
-            setIcon(lblEmailError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblEmailError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else if (!EMAIL_PATTERN.matcher(emailInput.trim()).matches()) {
             lblEmailError.setText("Invalid format - user@domain.com");
-            setIcon(lblEmailError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblEmailError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else {
             lblEmailError.setText("");
-            setIcon(lblEmailError, FontAwesome.CHECK_CIRCLE, Color.DARKGREEN, 16);
+            setIcon(lblEmailError, MaterialDesign.MDI_CHECK_CIRCLE, Color.DARKGREEN, 16);
             return true;
         }
     }
@@ -307,19 +308,19 @@ public class RegistrationController {
         String inputPassword = password.getText();
         if (inputPassword == null || inputPassword.isEmpty()) {
             lblPasswordError.setText("Required!");
-            setIcon(lblPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblPasswordError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else if (inputPassword.length() < 8) {
             lblPasswordError.setText("Minimum 8 Characters!");
-            setIcon(lblPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblPasswordError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else if (!PASSWORD_PATTERN.matcher(inputPassword).matches()) {
             lblPasswordError.setText("Uppercase, lowercase, number & special character");
-            setIcon(lblPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblPasswordError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else {
             lblPasswordError.setText("");
-            setIcon(lblPasswordError, FontAwesome.CHECK_CIRCLE, Color.DARKGREEN, 16);
+            setIcon(lblPasswordError, MaterialDesign.MDI_CHECK_CIRCLE, Color.DARKGREEN, 16);
             return true;
         }
     }
@@ -328,18 +329,17 @@ public class RegistrationController {
         clearErrorLabel(lblConfirmPasswordError);
         if (!password.getText().equals(confirmPassword.getText())) {
             lblConfirmPasswordError.setText("Not Matched!");
-            setIcon(lblConfirmPasswordError, FontAwesome.TIMES_CIRCLE_O, Color.DARKRED, 16);
+            setIcon(lblConfirmPasswordError, MaterialDesign.MDI_CLOSE_OCTAGON, Color.DARKRED, 16);
             return false;
         } else {
             lblConfirmPasswordError.setText("");
-            setIcon(lblConfirmPasswordError, FontAwesome.CHECK_CIRCLE, Color.DARKGREEN, 16);
+            setIcon(lblConfirmPasswordError, MaterialDesign.MDI_CHECK_CIRCLE, Color.DARKGREEN, 16);
             return true;
         }
     }
 
-    private void setIcon(Label errorLabel, FontAwesome iconName, Color iconColor, int iconSize) {
-        FontIcon icon = new FontIcon();
-        icon.setIconLiteral(iconName.getDescription());
+    private void setIcon(Label errorLabel, Ikon iconName, Color iconColor, int iconSize) {
+        FontIcon icon = new FontIcon(iconName);
         icon.setFill(iconColor);
         icon.setIconSize(iconSize);
         errorLabel.setGraphic(icon);

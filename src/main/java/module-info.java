@@ -9,7 +9,7 @@ module co.tareq.passwordmanager {
     requires org.mongodb.driver.core;
     requires static lombok;
     requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.ikonli.fontawesome;
+    requires org.kordamp.ikonli.materialdesign;
     requires java.desktop;
 
 
